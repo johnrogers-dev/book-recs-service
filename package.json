@@ -8,7 +8,8 @@
     "clean": "rm -rf ./build/*",
     "dev": "NODE_ENV=development nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "debug": "NODE_ENV=development DEBUG=* nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
-    "test": "NODE_ENV=test mocha -r ts-node/register tests/**/*.spec.ts || exit 0",
+    "test": "NODE_ENV=test mocha --exit -r ts-node/register tests/**/*.spec.ts || exit 0",
+    "coverage": "nyc npm run test",
     "prod": "NODE_ENV=production node ./build/index.js"
   },
   "author": "John Rogers",
@@ -34,6 +35,7 @@
     "chai-http": "^4.3.0",
     "mocha": "^8.2.1",
     "nodemon": "^2.0.6",
+    "nyc": "^15.1.0",
     "prettier": "^2.1.2",
     "ts-node": "^9.0.0",
     "tslint": "^6.1.3",

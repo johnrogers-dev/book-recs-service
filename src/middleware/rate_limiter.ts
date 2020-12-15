@@ -15,8 +15,8 @@ interface UserTokenBucket {
 };
 
 // these two parameters control the system-wide user rate limit: 10 requests per second, across all users
-const DEFAULT_USER_TOKEN_QUANTITY = 3; // 10 requests allowed per window time
-const WINDOW_SIZE_MILLISECONDS = 10000; // window size is every second
+const DEFAULT_USER_TOKEN_QUANTITY = 10; // 10 requests allowed per window time
+const WINDOW_SIZE_MILLISECONDS = 1000; // window size is every second
 
 const DEFAULT_SYSTEM_TOKEN_QUANTITY = 500;
 const DEFAULT_SYSTEM_WINDOWN_SIZE_MS = 1000;

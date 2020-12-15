@@ -11,7 +11,7 @@ router.get('/', async (req: Request, res: Response) => {
         let query = req.query;
         let allBooksByQuery = await Book.find({ ...query });
         if (allBooksByQuery.length === 0) {
-            res.status(200).json([]);
+            res.status(200).json({});
         }
         else {
             let i = Math.floor(Math.random() * Math.floor(allBooksByQuery.length));

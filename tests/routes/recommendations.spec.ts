@@ -9,61 +9,54 @@ chai.use(chaihttp);
 
 import app from '../../src/Server';
 
+const test_client_id = "thisistheclientid";
+const test_client_secret = "thisistheclientsecret"
 
 describe('Test /recommendations', () => {
+    let token;
     before(function (done) {
-        new Promise(resolve => setTimeout(resolve, 1500)).then(() => {
-            done();
+        this.timeout(0); // disable Mocha timeouts to give enough time for server to start
+        new Promise(resolve => setTimeout(resolve, 3000)).then(() => {
+            chai
+                .request(app)
+                .post('/oauth2/v1/token')
+                .set('authorization', `Basic ${Buffer.from(`${test_client_id}:${test_client_secret}`).toString('base64')}`)
+                .send({
+                    'grant_type': 'client_credentials'
+                })
+                .end((err, res) => {
+                    token = res.body.access_token;
+                    done();
+                })
+
         })
     });
     after(function () {
-        exit(0);
-    })
-    it('Should return all recommendations', done => {
+        // exit(0);
+    });
+    it('Should return an empty array', done => {
+        let querystring = `?genre=doesntexist`
         chai
             .request(app)
-            .get('/recommendations')
+            .get('/recommendations' + querystring)
+            .set('authorization', `Bearer ${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
-                expect(res.body).to.be.an('array')
+                expect(res).to.be.json;
+                expect(Object.keys(res.body).length).to.eq(0)
                 done();
             });
     });
-    it('Should return recommendation by id', done => {
+    it('Should return a valid recommendation', done => {
+        let querystring = `?genre=War`
         chai
             .request(app)
-            .get(`/recommendations/001`)
+            .get('/recommendations' + querystring)
+            .set('authorization', `Bearer ${token}`)
             .end((err, res) => {
                 res.should.have.status(200);
-                expect(res.body.name).to.eql("A Sand County Almanac")
-                done();
-            });
-    });
-    it('Should return 404 not found', done => {
-        chai
-            .request(app)
-            .get(`/recommendations/doesnotexistID`)
-            .end((err, res) => {
-                res.should.have.status(404);
-                done();
-            });
-    });
-    it('Should return random recommendation', done => {
-        chai
-            .request(app)
-            .get(`/recommendations/random/book`)
-            .end((err, res) => {
-                res.should.have.status(200);
+                expect(res).to.be.json;
                 expect(res.body.name).to.be.a("string")
-                done();
-            });
-    });
-    it('Should return 404', done => {
-        chai
-            .request(app)
-            .get('/does/not/exist')
-            .end((err, res) => {
-                res.should.have.status(404);
                 done();
             });
     });
