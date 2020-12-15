@@ -26,6 +26,12 @@ Tests the Typescript application using mocha and chai. Will run all `*.spec.ts` 
 
 `npm run test`
 
+### Test Coverage
+
+Tests the Typescript application using mocha and chai. Will run all `*.spec.ts` files located in the `tests` directory. Uses nyc to print test coverage to console.
+
+`npm run coverage`
+
 ### Production
 
 Runs the typescript application. Assumes build command has been completed successfully.
